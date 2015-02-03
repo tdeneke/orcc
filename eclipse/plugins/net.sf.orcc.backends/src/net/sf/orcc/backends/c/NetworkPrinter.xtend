@@ -155,6 +155,8 @@ class NetworkPrinter extends CTemplate {
 		// Declaration of the network
 		network_t network = {"«network.name»", actors, connections, «network.allActors.size», «network.connections.size»};
 		
+		// step1: small changes to generated file
+		// step2: refract into .c and .h  	
 		
 		////////////////////////////////////////////////////////////////////////////////
 		// Main

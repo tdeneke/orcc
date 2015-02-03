@@ -110,6 +110,7 @@ public class CBackend extends AbstractBackend {
 
 	private final TracesPrinter tracesPrinter;
 	private final StatisticsPrinter statsPrinter;
+	private final FfmpegInterfacePrinter interfacePrinter;
 
 	public CBackend() {
 		networkPrinter = new NetworkPrinter();
@@ -298,6 +299,8 @@ public class CBackend extends AbstractBackend {
 		final Mapping mapper = new Mapping(network, mapping);
 		result.merge(FilesManager.writeFile(mapper.getContentFile(), srcPath,
 				network.getSimpleName() + ".xcf"));
+		result.merge(FilesManager.writeFile(FfmpegInterfacePrinter .getContent(network),
+				srcPath, network.getSimpleName() + ".csv"));
 
 		return result;
 	}
