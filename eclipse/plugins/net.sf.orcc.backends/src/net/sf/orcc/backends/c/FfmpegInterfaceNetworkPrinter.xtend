@@ -134,14 +134,10 @@ class FfmpegInterfaceNetworkPrinter extends CTemplate {
 			«ENDIF»						
 		«ENDFOR»
 
-		actor_t *actors[] = {
+		actor_t *«network.getSimpleName()»_actors[] = {
 			«FOR child : network.children SEPARATOR ","»
-				«IF child.label != "source"»
-				«IF child.label != "display"»
-					&«child.label»
-				«ENDIF»	
-				«ENDIF»
-			«ENDFOR»
+				&«child.label»
+			«ENDFOR»	
 		};
 
 		/////////////////////////////////////////////////
@@ -150,7 +146,7 @@ class FfmpegInterfaceNetworkPrinter extends CTemplate {
 			connection_t connection_«connection.target.label»_«connection.targetPort.name» = {&«connection.source.label», &«connection.target.label», 0, 0};
 		«ENDFOR»
 
-		connection_t *connections[] = {
+		connection_t *«network.getSimpleName()»_connections[] = {
 			«FOR connection : network.connections SEPARATOR ","»
 			    &connection_«connection.target.label»_«connection.targetPort.name»
 			«ENDFOR»
@@ -158,15 +154,16 @@ class FfmpegInterfaceNetworkPrinter extends CTemplate {
 
 		/////////////////////////////////////////////////
 		// Declaration of the network
-		network_t network = {"«network.name»", actors, connections, «network.allActors.size»-2, «network.connections.size»};
+		network_t «network.getSimpleName()»_network = {"«network.name»", «network.getSimpleName()»_actors, «network.getSimpleName()»_connections, «network.allActors.size»-2, «network.connections.size»};
+		//network_t network = «network.getSimpleName()»_network
 		
-		options_t *opt;
+		options_t *«network.getSimpleName()»_opt;
 		
-		int start_actors(void* args) {
+		int «network.getSimpleName()»_start_actors(void* args) {
 			«network.getSimpleName()»_param_t* param = («network.getSimpleName()»_param_t*) args;
 			opt = init_orcc(param->argc, param->argv);
-			set_scheduling_strategy(«IF !newSchedul»"RR"«ELSE»"DD"«ENDIF», opt);
-			launcher(opt, &network);
+			set_scheduling_strategy(«IF !newSchedul»"RR"«ELSE»"DD"«ENDIF», «network.getSimpleName()»_opt);
+			launcher(«network.getSimpleName()»_opt, &«network.getSimpleName()»_network);
 			
 			return compareErrors;
 		}
@@ -181,7 +178,7 @@ class FfmpegInterfaceNetworkPrinter extends CTemplate {
 		    return 0;
 		}
 		
-		int orcc_decoder_end(lib«network.getSimpleName()»Context *ctx){
+		int «network.getSimpleName()»_decoder_end(lib«network.getSimpleName()»Context *ctx){
 		    printf("ended «network.getSimpleName()» \n");
 		    return 0;
 		}

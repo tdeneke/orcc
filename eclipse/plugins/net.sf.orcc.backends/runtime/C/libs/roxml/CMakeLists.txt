@@ -12,6 +12,7 @@ if(THREADS_FOUND)
 
     # Compile libraries
     add_library(roxml STATIC ${roxml_sources})
+    install(TARGETS roxml ARCHIVE DESTINATION lib)
 
     message(STATUS "Build roxml")
 else()

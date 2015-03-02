@@ -44,7 +44,7 @@ import static net.sf.orcc.backends.BackendsConstants.*
  * @author Tewodros Deneke
  * 
  */
-class NetworkPrinter extends CTemplate {
+class FfmpegInterfacePrinter extends CTemplate {
 	
 	protected var Network network;	
 	def setNetwork(Network network) {
@@ -56,36 +56,36 @@ class NetworkPrinter extends CTemplate {
 	}
 
 	def protected getNetworkFileContent() '''
-		typedef struct orcc264_param_t{
+		typedef struct «network.getSimpleName()»_param_t{
 			int argc;
 			char **argv;
-		} orcc264_param_t;
+		} «network.getSimpleName()»_param_t;
 		
-		typedef struct liborcc264Context {
+		typedef struct lib«network.getSimpleName()»Context {
 		    //schedinfo_t* source_sched_info;
 		    //schedinfo_t* sink_sched_info;
 		    int frames_decoded;
 		    //orcc_thread_t launch_thread;
 		    //orcc_thread_id_t launch_thread_id;
-		    //orcc264_param_t* param;
-		} liborcc264Context;
+		    //«network.getSimpleName()»_param_t* param;
+		} lib«network.getSimpleName()»Context;
 		
-		typedef struct liborcc264Packet {
+		typedef struct lib«network.getSimpleName()»Packet {
 		    int size;
 		    unsigned char* buf;
-		} liborcc264Packet;
+		} lib«network.getSimpleName()»Packet;
 		
-		typedef struct liborcc264Picture {
+		typedef struct lib«network.getSimpleName()»Picture {
 		    short int width;
 		    short int height;
 		    int format;
 		    unsigned char* pic_buf_y;
 		    unsigned char* pic_buf_u;
 		    unsigned char* pic_buf_v;
-		} liborcc264Picture;
+		} lib«network.getSimpleName()»Picture;
 		
-		int orcc264_decoder_init(liborcc264Context *ctx);
-		int orcc264_decoder_decode(liborcc264Context *ctx, liborcc264Picture *pic, int *got_frame, liborcc264Packet *pkt);
-		int orcc_decoder_end(liborcc264Context *ctx);
-	'''		
+		int «network.getSimpleName()»_decoder_init(lib«network.getSimpleName()»Context *ctx);
+		int «network.getSimpleName()»_decoder_decode(lib«network.getSimpleName()»Context *ctx, lib«network.getSimpleName()»Picture *pic, int *got_frame, lib«network.getSimpleName()»Packet *pkt);
+		int «network.getSimpleName()»_decoder_end(lib«network.getSimpleName()»Context *ctx);
+	'''
 }

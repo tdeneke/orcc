@@ -104,7 +104,7 @@ public class CBackend extends AbstractBackend {
 	 */
 	protected String srcPath;
 
-	private final NetworkPrinter networkPrinter;
+	private final FfmpegInterfaceNetworkPrinter networkPrinter;
 	private final CMakePrinter cmakePrinter;
 	private final InstancePrinter instancePrinter;
 
@@ -113,12 +113,13 @@ public class CBackend extends AbstractBackend {
 	private final FfmpegInterfacePrinter interfacePrinter;
 
 	public CBackend() {
-		networkPrinter = new NetworkPrinter();
+		networkPrinter = new FfmpegInterfaceNetworkPrinter();
 		cmakePrinter = new CMakePrinter();
 		instancePrinter = new InstancePrinter();
 
 		tracesPrinter = new TracesPrinter();
 		statsPrinter = new StatisticsPrinter();
+		interfacePrinter = new FfmpegInterfacePrinter();
 	}
 
 	@Override
@@ -281,12 +282,15 @@ public class CBackend extends AbstractBackend {
 	@Override
 	protected Result doAdditionalGeneration(Network network) {
 		cmakePrinter.setNetwork(network);
+		interfacePrinter.setNetwork(network);
 		final Result result = Result.newInstance();
 		result.merge(FilesManager.writeFile(cmakePrinter.rootCMakeContent(),
 				outputPath, "CMakeLists.txt"));
 		result.merge(FilesManager.writeFile(cmakePrinter.srcCMakeContent(),
 				srcPath, "CMakeLists.txt"));
-
+		result.merge(FilesManager.writeFile(cmakePrinter.srcPkgConfigCMakeContent(),
+				srcPath, "pkg-config.pc.cmake"));
+	
 		if (getOption(ENABLE_TRACES, true)) {
 			result.merge(FilesManager.writeFile(
 					tracesPrinter.getTracesFileContent(network), srcPath,
@@ -299,9 +303,9 @@ public class CBackend extends AbstractBackend {
 		final Mapping mapper = new Mapping(network, mapping);
 		result.merge(FilesManager.writeFile(mapper.getContentFile(), srcPath,
 				network.getSimpleName() + ".xcf"));
-		result.merge(FilesManager.writeFile(FfmpegInterfacePrinter .getContent(network),
-				srcPath, network.getSimpleName() + ".csv"));
-
+		result.merge(FilesManager.writeFile(interfacePrinter.getNetworkFileContent(),
+				srcPath, network.getSimpleName() + ".h"));
+		
 		return result;
 	}
 

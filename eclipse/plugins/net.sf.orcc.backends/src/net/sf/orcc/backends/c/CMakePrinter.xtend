@@ -97,9 +97,48 @@ class CMakePrinter extends CommonPrinter {
 		
 		include_directories(${extra_includes})
 		add_definitions(${extra_definitions})
-		add_executable(«network.simpleName» ${filenames})
-
-		# Build library without any external library required
-		target_link_libraries(«network.simpleName» orcc-native orcc-runtime ${extra_libraries})
+		
+		# Compile libraries
+		add_library(«network.simpleName» STATIC ${filenames} «network.simpleName».h)
+		
+		SET(PKG_CONFIG_REQUIRES )
+		SET(PKG_CONFIG_LIBDIR
+		    "\${prefix}/lib"
+		)
+		SET(PKG_CONFIG_INCLUDEDIR
+		    "\${prefix}/include"
+		)
+		SET(PKG_CONFIG_LIBS
+		    "-L\${libdir} -l«network.simpleName» -lorcc-runtime  -lorcc-native -lroxml -lSDL"
+		)
+		SET(PKG_CONFIG_CFLAGS
+		    "-I\${includedir}"
+		)
+		
+		CONFIGURE_FILE(
+		  "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config.pc.cmake"
+		  "${CMAKE_CURRENT_BINARY_DIR}/«network.simpleName».pc"
+		)
+		
+		INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/«network.simpleName».pc" DESTINATION lib/pkgconfig)
+		install(TARGETS «network.simpleName» DESTINATION lib)
+		install(FILES «network.simpleName».h DESTINATION include)
+			
+		#add_executable(«network.simpleName»app ${filenames})
+		#Build library without any external library required
+		#target_link_libraries(«network.simpleName»app orcc-native orcc-runtime ${extra_libraries})
 	'''
+	
+	def srcPkgConfigCMakeContent() '''
+		Name: ${PROJECT_NAME}
+		Description: ${PROJECT_DESCRIPTION}
+		Version: ${PROJECT_VERSION}
+		Requires: ${PKG_CONFIG_REQUIRES}
+		prefix=${CMAKE_INSTALL_PREFIX}
+		includedir=${PKG_CONFIG_INCLUDEDIR}
+		libdir=${PKG_CONFIG_LIBDIR}
+		Libs: ${PKG_CONFIG_LIBS}
+		Cflags: ${PKG_CONFIG_CFLAGS}
+	'''
+	
 }
