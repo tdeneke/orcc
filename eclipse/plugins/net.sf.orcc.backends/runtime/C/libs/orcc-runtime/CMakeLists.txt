@@ -23,6 +23,9 @@ set(orcc_runtime_headers
     include/profiling.h
     include/types.h
     include/orcc.h
+    include/fifo.h
+    include/generic_fifo.h
+    include/cycle.h
 )
 
 if(ROXML_ENABLE)
@@ -51,6 +54,8 @@ target_link_libraries(orcc-runtime orcc-native ${extra_libraries})
 install(TARGETS orcc-runtime
     ARCHIVE DESTINATION lib
 )
+
+install(FILES ${orcc_runtime_headers} DESTINATION include)
 
 set(extra_definitions ${extra_definitions} PARENT_SCOPE)
 set(extra_includes ${extra_includes} PARENT_SCOPE)

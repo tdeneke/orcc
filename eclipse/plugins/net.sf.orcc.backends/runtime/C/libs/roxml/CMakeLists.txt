@@ -9,10 +9,16 @@ if(THREADS_FOUND)
         src/*.c
         include/*.h
     )
-
+    
+	# Initialize header files list for roxml
+    file(GLOB roxml_headers
+        include/*.h
+    )
+	
     # Compile libraries
     add_library(roxml STATIC ${roxml_sources})
     install(TARGETS roxml ARCHIVE DESTINATION lib)
+    install(FILES ${roxml_headers} DESTINATION include)
 
     message(STATUS "Build roxml")
 else()

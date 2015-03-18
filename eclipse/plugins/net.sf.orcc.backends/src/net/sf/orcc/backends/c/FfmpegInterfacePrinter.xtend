@@ -56,18 +56,36 @@ class FfmpegInterfacePrinter extends CTemplate {
 	}
 
 	def protected getNetworkFileContent() '''
+		// Generated from "«network.name»"
+		
+		#include <locale.h>
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include "config.h"
+		
+		#include "types.h"
+		#include "fifo.h"
+		#include "util.h"
+		#include "dataflow.h"
+		#include "serialize.h"
+		#include "options.h"
+		#include "scheduler.h"
+		#include "cycle.h"
+		#include "thread.h"
+		
 		typedef struct «network.getSimpleName()»_param_t{
 			int argc;
 			char **argv;
 		} «network.getSimpleName()»_param_t;
 		
+
 		typedef struct lib«network.getSimpleName()»Context {
-		    //schedinfo_t* source_sched_info;
-		    //schedinfo_t* sink_sched_info;
+		    schedinfo_t* source_sched_info;
+		    schedinfo_t* sink_sched_info;
 		    int frames_decoded;
-		    //orcc_thread_t launch_thread;
-		    //orcc_thread_id_t launch_thread_id;
-		    //«network.getSimpleName()»_param_t* param;
+		    orcc_thread_t launch_thread;
+		    orcc_thread_id_t launch_thread_id;
+		    «network.getSimpleName()»_param_t* param;
 		} lib«network.getSimpleName()»Context;
 		
 		typedef struct lib«network.getSimpleName()»Packet {
@@ -87,5 +105,7 @@ class FfmpegInterfacePrinter extends CTemplate {
 		int «network.getSimpleName()»_decoder_init(lib«network.getSimpleName()»Context *ctx);
 		int «network.getSimpleName()»_decoder_decode(lib«network.getSimpleName()»Context *ctx, lib«network.getSimpleName()»Picture *pic, int *got_frame, lib«network.getSimpleName()»Packet *pkt);
 		int «network.getSimpleName()»_decoder_end(lib«network.getSimpleName()»Context *ctx);
+		void* «network.getSimpleName()»_start_actors(void* args);
+		#define SIZE «fifoSize»
 	'''
 }

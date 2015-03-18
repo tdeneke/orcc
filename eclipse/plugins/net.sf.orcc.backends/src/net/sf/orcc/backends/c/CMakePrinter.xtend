@@ -51,6 +51,9 @@ class CMakePrinter extends CommonPrinter {
 		cmake_minimum_required (VERSION 2.6)
 
 		project («network.simpleName»)
+		
+		# Configure install path, platform dependent path!
+		# SET(CMAKE_INSTALL_PREFIX /usr/local/lib«network.simpleName»)
 
 		# Configure ouput folder for generated binary
 		set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -68,6 +71,7 @@ class CMakePrinter extends CommonPrinter {
 		)
 
 		«addLibrariesSubdirs»
+		install(FILES ${PROJECT_BINARY_DIR}/libs/config.h DESTINATION include)
 	'''
 
 	/**
@@ -114,12 +118,16 @@ class CMakePrinter extends CommonPrinter {
 		SET(PKG_CONFIG_CFLAGS
 		    "-I\${includedir}"
 		)
+		SET(PKG_CONFIG_DESTINATION
+		    "/usr/local/"
+		)
 		
 		CONFIGURE_FILE(
 		  "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config.pc.cmake"
 		  "${CMAKE_CURRENT_BINARY_DIR}/«network.simpleName».pc"
 		)
 		
+		#platform 
 		INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/«network.simpleName».pc" DESTINATION lib/pkgconfig)
 		install(TARGETS «network.simpleName» DESTINATION lib)
 		install(FILES «network.simpleName».h DESTINATION include)

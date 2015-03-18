@@ -135,6 +135,8 @@ install(TARGETS orcc-native
     ARCHIVE DESTINATION lib
 )
 
+install(FILES ${orcc_native_headers} DESTINATION include)
+
 set(extra_definitions ${extra_definitions} PARENT_SCOPE)
 set(extra_includes ${extra_includes} PARENT_SCOPE)
 set(extra_libraries ${extra_libraries} PARENT_SCOPE)
