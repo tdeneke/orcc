@@ -106,6 +106,8 @@ class FfmpegInterfacePrinter extends CTemplate {
 		int «network.getSimpleName()»_decoder_decode(lib«network.getSimpleName()»Context *ctx, lib«network.getSimpleName()»Picture *pic, int *got_frame, lib«network.getSimpleName()»Packet *pkt);
 		int «network.getSimpleName()»_decoder_end(lib«network.getSimpleName()»Context *ctx);
 		void* «network.getSimpleName()»_start_actors(void* args);
-		#define SIZE «fifoSize»
+		/* fifo size is generated to zero for some reason, so hard coded for now */
+		/* #define SIZE «fifoSize» */
+		#define SIZE 8192
 	'''
 }

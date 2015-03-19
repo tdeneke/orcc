@@ -49,6 +49,7 @@ extern char *optarg;
 extern int getopt(int nargc, char * const *nargv, const char *ostr);
 
 options_t *opt;
+network_t *network;
 
 // compute number of errors in the program
 int compareErrors = 0;
@@ -114,12 +115,14 @@ void pause() {
 
 /////////////////////////////////////
 // initializes APR and parses options
-options_t* init_orcc(int argc, char *argv[]) {
+options_t* init_orcc(int argc, char *argv[], network_t *net) {
     // every command line option must be followed by ':' if it takes an
     // argument, and '::' if this argument is optional
     const char *ostr = "i:no:d:m:q:f:w:l:zr:ac:s:v:p:h";
     int c;
 
+    //set the network
+    network = net;
     opt = set_default_options();
 
     program = argv[0];
@@ -202,7 +205,9 @@ options_t* init_orcc(int argc, char *argv[]) {
     return opt;
 }
 
-extern network_t network;
+// we get the network through init_orcc as we want to compile multiple instances of
+// networks
+//extern network_t network;
 
 // Actions to do when exting properly
 void atexit_actions() {

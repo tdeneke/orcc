@@ -38,7 +38,9 @@ extern options_t *opt;
 extern int compareErrors;
 
 // initialize APR and parse command-line options
-options_t* init_orcc(int argc, char *argv[]);
+// added a network argument so that we avoid using extern to access the network
+// incase we want to compile multiple netwoks in to a library.
+options_t* init_orcc(int argc, char *argv[], network_t *net);
 
 // print usage
 void print_usage();
