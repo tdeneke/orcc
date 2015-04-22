@@ -40,7 +40,6 @@ import static net.sf.orcc.backends.BackendsConstants.*
 
 /**
  * Generate and print network source file for C backend.
- *  
  * @author Antoine Lorence 
  * @author Tewodros Deneke
  */
@@ -129,7 +128,7 @@ class FfmpegInterfaceNetworkPrinter extends CTemplate {
 
 		actor_t *«network.getSimpleName()»_actors[] = {
 			«FOR child : network.children SEPARATOR ","»
-				«IF child.label == "AVCSource" || child.label == "AVCDisplay" || child.label == "HEVCSource" || child.label == "HEVCDisplay"»
+				«IF child.label == "MPEG4Source" || child.label == "MPEG4Display" || child.label == "AVCSource" || child.label == "AVCDisplay" || child.label == "HEVCSource" || child.label == "HEVCDisplay"»
 					//&«child.label»
 				«ELSE»
 					&«child.label»	
